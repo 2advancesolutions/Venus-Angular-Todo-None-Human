@@ -1,1 +1,13 @@
-<p>todo-list works!</p>
+<div class="todo-list-container">
+  <h1 class="todo-list-title">My Todo List</h1>
+  
+  <div class="todo-cards">
+    <div class="todo-card" *ngFor="let todo of todos">
+      <div class="todo-card-header">
+        <h2 class="todo-title">{{ todo.title }}</h2>
+        <span class="todo-id">#{{ todo.id }}</span>
+      </div>
+      <p class="todo-description">{{ todo.description }}</p>
+    </div>
+  </div>
+</div>
