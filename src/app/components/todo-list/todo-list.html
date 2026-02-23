@@ -1,0 +1,192 @@
+<div class="todo-list-container">
+  <h1 class="todo-list-title">My Todo List</h1>
+  
+  <!-- Add Todo Form -->
+  <div class="add-todo-form">
+    <h2 class="form-title">Add New Todo</h2>
+    <form (ngSubmit)="addTodo()">
+      <div class="form-group">
+        <label for="title">Title</label>
+        <input 
+          type="text" 
+          id="title" 
+          name="title"
+          [(ngModel)]="newTodoTitle"
+          placeholder="Enter todo title"
+          class="form-input"
+          required
+        />
+      </div>
+      
+      <div class="form-group">
+        <label for="description">Description</label>
+        <textarea 
+          id="description" 
+          name="description"
+          [(ngModel)]="newTodoDescription"
+          placeholder="Enter todo description"
+          class="form-textarea"
+          rows="3"
+          required
+        ></textarea>
+      </div>
+      
+      <button type="submit" class="btn-add">Add Todo</button>
+    </form>
+  </div>
+
+  <!-- Two Column Layout for Active and Done Todos -->
+  <div class="todo-panels">
+    <!-- Active Todos Panel -->
+    <div class="todo-panel">
+      <h2 class="panel-title">Active Todos ({{ todos.length }})</h2>
+      <div 
+        class="todo-cards"
+        cdkDropList
+        #activeTodoList="cdkDropList"
+        [cdkDropListData]="todos"
+        [cdkDropListConnectedTo]="[doneTodoList]"
+        (cdkDropListDropped)="drop($event)"
+      >
+        <div class="todo-card" *ngFor="let todo of todos" cdkDrag>
+          <!-- Drag Handle -->
+          <div class="drag-handle" cdkDragHandle>⋮⋮</div>
+          
+          <!-- View Mode -->
+          <div *ngIf="!isEditing(todo.id)" class="todo-content">
+            <div class="todo-card-header">
+              <div class="todo-header-left">
+                <h3 class="todo-title">{{ todo.title }}</h3>
+                <span class="todo-id">#{{ todo.id }}</span>
+              </div>
+              <div class="todo-actions">
+                <button 
+                  class="btn-edit" 
+                  (click)="startEdit(todo)"
+                  aria-label="Edit todo"
+                  title="Edit this todo"
+                >
+                  ✎
+                </button>
+                <button 
+                  class="btn-delete" 
+                  (click)="deleteTodo(todo.id, false)"
+                  aria-label="Delete todo"
+                  title="Delete this todo"
+                >
+                  ✕
+                </button>
+              </div>
+            </div>
+            <p class="todo-description">{{ todo.description }}</p>
+          </div>
+
+          <!-- Edit Mode -->
+          <div *ngIf="isEditing(todo.id)" class="edit-mode">
+            <div class="edit-header">
+              <h3 class="edit-title">Editing Todo #{{ todo.id }}</h3>
+            </div>
+            <form (ngSubmit)="saveEdit(todo.id)">
+              <div class="form-group">
+                <label [for]="'edit-title-' + todo.id">Title</label>
+                <input 
+                  type="text" 
+                  [id]="'edit-title-' + todo.id"
+                  [name]="'edit-title-' + todo.id"
+                  [(ngModel)]="editTodoTitle"
+                  placeholder="Enter todo title"
+                  class="form-input"
+                  required
+                />
+              </div>
+              
+              <div class="form-group">
+                <label [for]="'edit-description-' + todo.id">Description</label>
+                <textarea 
+                  [id]="'edit-description-' + todo.id"
+                  [name]="'edit-description-' + todo.id"
+                  [(ngModel)]="editTodoDescription"
+                  placeholder="Enter todo description"
+                  class="form-textarea"
+                  rows="3"
+                  required
+                ></textarea>
+              </div>
+              
+              <div class="edit-actions">
+                <button type="submit" class="btn-save">Save</button>
+                <button type="button" class="btn-cancel" (click)="cancelEdit()">Cancel</button>
+              </div>
+            </form>
+          </div>
+
+          <!-- Drag Preview -->
+          <div class="todo-drag-preview" *cdkDragPreview>
+            <div class="preview-header">
+              <h3 class="preview-title">{{ todo.title }}</h3>
+              <span class="preview-id">#{{ todo.id }}</span>
+            </div>
+            <p class="preview-description">{{ todo.description }}</p>
+          </div>
+        </div>
+        
+        <!-- Empty State -->
+        <div class="empty-state" *ngIf="todos.length === 0">
+          <p>No active todos. Add one above or drag completed items back here!</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Done Todos Panel -->
+    <div class="todo-panel done-panel">
+      <h2 class="panel-title">Done ({{ doneTodos.length }})</h2>
+      <div 
+        class="todo-cards done-cards"
+        cdkDropList
+        #doneTodoList="cdkDropList"
+        [cdkDropListData]="doneTodos"
+        [cdkDropListConnectedTo]="[activeTodoList]"
+        (cdkDropListDropped)="drop($event)"
+      >
+        <div class="todo-card done-card" *ngFor="let todo of doneTodos" cdkDrag>
+          <!-- Drag Handle -->
+          <div class="drag-handle" cdkDragHandle>⋮⋮</div>
+          
+          <div class="todo-content">
+            <div class="todo-card-header">
+              <div class="todo-header-left">
+                <h3 class="todo-title">{{ todo.title }}</h3>
+                <span class="todo-id">#{{ todo.id }}</span>
+              </div>
+              <div class="todo-actions">
+                <button 
+                  class="btn-delete" 
+                  (click)="deleteTodo(todo.id, true)"
+                  aria-label="Delete todo"
+                  title="Delete this todo"
+                >
+                  ✕
+                </button>
+              </div>
+            </div>
+            <p class="todo-description">{{ todo.description }}</p>
+          </div>
+
+          <!-- Drag Preview -->
+          <div class="todo-drag-preview" *cdkDragPreview>
+            <div class="preview-header">
+              <h3 class="preview-title">{{ todo.title }}</h3>
+              <span class="preview-id">#{{ todo.id }}</span>
+            </div>
+            <p class="preview-description">{{ todo.description }}</p>
+          </div>
+        </div>
+        
+        <!-- Empty State -->
+        <div class="empty-state done-empty" *ngIf="doneTodos.length === 0">
+          <p>✓ Drag completed todos here</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
