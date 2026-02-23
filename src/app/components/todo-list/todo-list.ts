@@ -40,6 +40,10 @@ export class TodoListComponent {
 
   newTodoTitle: string = '';
   newTodoDescription: string = '';
+  
+  editingTodoId: number | null = null;
+  editTodoTitle: string = '';
+  editTodoDescription: string = '';
 
   addTodo(): void {
     if (this.newTodoTitle.trim() && this.newTodoDescription.trim()) {
@@ -59,5 +63,32 @@ export class TodoListComponent {
 
   deleteTodo(id: number): void {
     this.todos = this.todos.filter(todo => todo.id !== id);
+  }
+
+  startEdit(todo: Todo): void {
+    this.editingTodoId = todo.id;
+    this.editTodoTitle = todo.title;
+    this.editTodoDescription = todo.description;
+  }
+
+  saveEdit(id: number): void {
+    if (this.editTodoTitle.trim() && this.editTodoDescription.trim()) {
+      const todoIndex = this.todos.findIndex(todo => todo.id === id);
+      if (todoIndex !== -1) {
+        this.todos[todoIndex].title = this.editTodoTitle.trim();
+        this.todos[todoIndex].description = this.editTodoDescription.trim();
+      }
+      this.cancelEdit();
+    }
+  }
+
+  cancelEdit(): void {
+    this.editingTodoId = null;
+    this.editTodoTitle = '';
+    this.editTodoDescription = '';
+  }
+
+  isEditing(id: number): boolean {
+    return this.editingTodoId === id;
   }
 }
