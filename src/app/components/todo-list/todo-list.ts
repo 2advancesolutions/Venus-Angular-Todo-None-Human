@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 
 interface Todo {
   id: number;
@@ -9,7 +10,7 @@ interface Todo {
 
 @Component({
   selector: 'app-todo-list',
-  imports: [CommonModule],
+  imports: [CommonModule, FormsModule],
   templateUrl: './todo-list.html',
   styleUrl: './todo-list.css'
 })
@@ -36,4 +37,23 @@ export class TodoListComponent {
       description: 'Add comprehensive test coverage for all components and services'
     }
   ];
+
+  newTodoTitle: string = '';
+  newTodoDescription: string = '';
+
+  addTodo(): void {
+    if (this.newTodoTitle.trim() && this.newTodoDescription.trim()) {
+      const newTodo: Todo = {
+        id: this.todos.length > 0 ? Math.max(...this.todos.map(t => t.id)) + 1 : 1,
+        title: this.newTodoTitle.trim(),
+        description: this.newTodoDescription.trim()
+      };
+      
+      this.todos.push(newTodo);
+      
+      // Clear the form
+      this.newTodoTitle = '';
+      this.newTodoDescription = '';
+    }
+  }
 }

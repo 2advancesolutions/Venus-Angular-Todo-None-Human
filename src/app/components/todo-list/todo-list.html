@@ -1,6 +1,41 @@
 <div class="todo-list-container">
   <h1 class="todo-list-title">My Todo List</h1>
   
+  <!-- Add Todo Form -->
+  <div class="add-todo-form">
+    <h2 class="form-title">Add New Todo</h2>
+    <form (ngSubmit)="addTodo()">
+      <div class="form-group">
+        <label for="title">Title</label>
+        <input 
+          type="text" 
+          id="title" 
+          name="title"
+          [(ngModel)]="newTodoTitle"
+          placeholder="Enter todo title"
+          class="form-input"
+          required
+        />
+      </div>
+      
+      <div class="form-group">
+        <label for="description">Description</label>
+        <textarea 
+          id="description" 
+          name="description"
+          [(ngModel)]="newTodoDescription"
+          placeholder="Enter todo description"
+          class="form-textarea"
+          rows="3"
+          required
+        ></textarea>
+      </div>
+      
+      <button type="submit" class="btn-add">Add Todo</button>
+    </form>
+  </div>
+
+  <!-- Todo Cards -->
   <div class="todo-cards">
     <div class="todo-card" *ngFor="let todo of todos">
       <div class="todo-card-header">
