@@ -56,4 +56,8 @@ export class TodoListComponent {
       this.newTodoDescription = '';
     }
   }
+
+  deleteTodo(id: number): void {
+    this.todos = this.todos.filter(todo => todo.id !== id);
+  }
 }

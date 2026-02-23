@@ -39,8 +39,18 @@
   <div class="todo-cards">
     <div class="todo-card" *ngFor="let todo of todos">
       <div class="todo-card-header">
-        <h2 class="todo-title">{{ todo.title }}</h2>
-        <span class="todo-id">#{{ todo.id }}</span>
+        <div class="todo-header-left">
+          <h2 class="todo-title">{{ todo.title }}</h2>
+          <span class="todo-id">#{{ todo.id }}</span>
+        </div>
+        <button 
+          class="btn-delete" 
+          (click)="deleteTodo(todo.id)"
+          aria-label="Delete todo"
+          title="Delete this todo"
+        >
+          ✕
+        </button>
       </div>
       <p class="todo-description">{{ todo.description }}</p>
     </div>
