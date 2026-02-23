@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { CdkDragDrop, DragDropModule, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
 
 interface Todo {
   id: number;
@@ -10,7 +11,7 @@ interface Todo {
 
 @Component({
   selector: 'app-todo-list',
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, DragDropModule],
   templateUrl: './todo-list.html',
   styleUrl: './todo-list.css'
 })
@@ -38,6 +39,8 @@ export class TodoListComponent {
     }
   ];
 
+  doneTodos: Todo[] = [];
+
   newTodoTitle: string = '';
   newTodoDescription: string = '';
   
@@ -61,8 +64,12 @@ export class TodoListComponent {
     }
   }
 
-  deleteTodo(id: number): void {
-    this.todos = this.todos.filter(todo => todo.id !== id);
+  deleteTodo(id: number, isDone: boolean = false): void {
+    if (isDone) {
+      this.doneTodos = this.doneTodos.filter(todo => todo.id !== id);
+    } else {
+      this.todos = this.todos.filter(todo => todo.id !== id);
+    }
   }
 
   startEdit(todo: Todo): void {
@@ -90,5 +97,20 @@ export class TodoListComponent {
 
   isEditing(id: number): boolean {
     return this.editingTodoId === id;
+  }
+
+  drop(event: CdkDragDrop<Todo[]>): void {
+    if (event.previousContainer === event.container) {
+      moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
+    } else {
+      transferArrayItem(
+        event.previousContainer.data,
+        event.container.data,
+        event.previousIndex,
+        event.currentIndex
+      );
+      // Cancel edit mode if moving a todo
+      this.cancelEdit();
+    }
   }
 }

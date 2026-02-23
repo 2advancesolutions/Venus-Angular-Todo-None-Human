@@ -1,5 +1,5 @@
 .todo-list-container {
-  max-width: 800px;
+  max-width: 1200px;
   margin: 0 auto;
   padding: 2rem;
 }
@@ -83,25 +83,126 @@
   transform: scale(0.98);
 }
 
-/* Todo Cards Styles */
+/* Two Panel Layout */
+.todo-panels {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+  align-items: start;
+}
+
+@media (max-width: 968px) {
+  .todo-panels {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Panel Styles */
+.todo-panel {
+  display: flex;
+  flex-direction: column;
+}
+
+.panel-title {
+  font-size: 1.5rem;
+  color: #2c3e50;
+  margin: 0 0 1rem 0;
+  font-weight: 600;
+  padding: 0.5rem 1rem;
+  background: #f8f9fa;
+  border-radius: 6px;
+  border-left: 4px solid #2196F3;
+}
+
+.done-panel .panel-title {
+  border-left-color: #4CAF50;
+}
+
+/* Todo Cards Container */
 .todo-cards {
   display: flex;
   flex-direction: column;
   gap: 1rem;
+  min-height: 200px;
+  padding: 1rem;
+  background: #fafafa;
+  border: 2px dashed #ddd;
+  border-radius: 8px;
 }
 
+.done-cards {
+  background: #f0f8f0;
+  border-color: #c8e6c9;
+}
+
+/* Empty State */
+.empty-state {
+  text-align: center;
+  padding: 3rem 1rem;
+  color: #999;
+  font-size: 0.95rem;
+}
+
+.done-empty {
+  font-size: 1.1rem;
+  color: #4CAF50;
+}
+
+/* Todo Card Styles */
 .todo-card {
   background: #fff;
   border: 1px solid #e0e0e0;
   border-radius: 8px;
-  padding: 1.5rem;
+  padding: 1rem 1rem 1rem 0.5rem;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   transition: transform 0.2s, box-shadow 0.2s;
+  position: relative;
+  display: flex;
+  gap: 0.5rem;
+  cursor: move;
 }
 
 .todo-card:hover {
   transform: translateY(-2px);
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+.done-card {
+  background: #f9fff9;
+  border-color: #c8e6c9;
+  opacity: 0.9;
+}
+
+.done-card .todo-title {
+  text-decoration: line-through;
+  color: #666;
+}
+
+/* Drag Handle */
+.drag-handle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  color: #bbb;
+  font-size: 1.2rem;
+  cursor: grab;
+  user-select: none;
+  flex-shrink: 0;
+  padding-top: 0.5rem;
+}
+
+.drag-handle:active {
+  cursor: grabbing;
+}
+
+.drag-handle:hover {
+  color: #888;
+}
+
+/* Todo Content */
+.todo-content {
+  flex: 1;
 }
 
 .todo-card-header {
@@ -119,7 +220,7 @@
 }
 
 .todo-title {
-  font-size: 1.25rem;
+  font-size: 1.15rem;
   color: #2c3e50;
   margin: 0;
   font-weight: 600;
@@ -204,7 +305,7 @@
   background: #f0f8ff;
   padding: 1rem;
   border-radius: 4px;
-  margin: -0.5rem;
+  flex: 1;
 }
 
 .edit-header {
@@ -262,4 +363,64 @@
 
 .btn-cancel:active {
   transform: scale(0.98);
+}
+
+/* CDK Drag & Drop Styles */
+.cdk-drag-preview {
+  box-sizing: border-box;
+  border-radius: 8px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+  opacity: 0.9;
+}
+
+.cdk-drag-placeholder {
+  opacity: 0.3;
+}
+
+.cdk-drag-animating {
+  transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
+}
+
+.todo-cards.cdk-drop-list-dragging .todo-card:not(.cdk-drag-placeholder) {
+  transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
+}
+
+/* Drag Preview */
+.todo-drag-preview {
+  background: #fff;
+  border: 2px solid #2196F3;
+  border-radius: 8px;
+  padding: 1rem;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+  max-width: 400px;
+}
+
+.preview-header {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 0.5rem;
+}
+
+.preview-title {
+  font-size: 1.15rem;
+  color: #2c3e50;
+  margin: 0;
+  font-weight: 600;
+}
+
+.preview-id {
+  font-size: 0.875rem;
+  color: #7f8c8d;
+  font-weight: 500;
+  background: #ecf0f1;
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+}
+
+.preview-description {
+  color: #555;
+  line-height: 1.6;
+  margin: 0;
+  font-size: 0.95rem;
 }
